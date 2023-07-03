@@ -52,7 +52,19 @@ class PySparkCheckBackend(BaseCheckBackend):
     def preprocess(
         self,
         check_obj: DataFrame,  # type: ignore [valid-type]
-        key: str,
+        key: str
+    ) -> DataFrame:
+        return check_obj
+
+    # Workaround for multimethod not supporting Optional arguments
+    # such as `key: Optional[str]` (fails in multimethod)
+    # https://github.com/coady/multimethod/issues/90
+    # FIXME when the multimethod supports Optional args
+    @overload  # type: ignore [no-redef]
+    def preprocess(
+        self,
+        check_obj: DataFrame,  # type: ignore [valid-type]
+        key=None
     ) -> DataFrame:
         return check_obj
 
